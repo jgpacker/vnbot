@@ -1,4 +1,4 @@
 import logging
 
 BOT_TOKEN = "secret-token"
-DEBUG_LEVEL = logging.DEBUG
+LOGGING_LEVEL = logging.DEBUG

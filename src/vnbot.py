@@ -3,11 +3,6 @@
 
 """
 This Bot uses the Updater class to handle the bot.
-
-Using python-telegram-bot==4.0rc1
-
-Press Ctrl-C on the command line or send a signal to the process to stop the
-bot.
 """
 
 import logging
@@ -18,7 +13,7 @@ from bot_globals import *
 # Enable logging
 logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-        level=DEBUG_LEVEL)
+        level=LOGGING_LEVEL)
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +33,7 @@ def echo(bot, update):
 
 
 def error(bot, update, error):
-    logger.warn('Update "%s" caused error "%s"' % (update, error))
+    logger.error('Update "%s" caused error "%s"' % (update, error))
 
 
 def main():
