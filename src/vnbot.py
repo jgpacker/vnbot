@@ -10,6 +10,10 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, filters
 
 from bot_globals import *
 
+from vndb import VNDB
+
+import json
+
 # Enable logging
 logging.basicConfig(
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,24 +21,30 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+vndb = VNDB()
 
 # Define a few command handlers. These usually take the two arguments bot and
 # update. Error handlers also receive the raised TelegramError object in error.
 def start(bot, update):
     bot.sendMessage(update.message.chat_id, text='Hi!')
 
+def vn_search(bot, update):
+    search_term = update.message.text
+    result = vndb.search(search_term, flags="basic")
+    response = map(lambda it: it['title'], json.loads(result))
+    bot.sendMessage(update.message.chat_id, text=response)
 
 def help(bot, update):
-    bot.sendMessage(update.message.chat_id, text='Help!')
+    HELP_TEXT='''
+Send /vn-search <search-term> to get a list of search results from Vndb.org;
+'''
+    bot.sendMessage(update.message.chat_id, text=HELP_TEXT)
 
-
-def echo(bot, update):
-    bot.sendMessage(update.message.chat_id, text=update.message.text)
-
+def ping(bot, update):
+    bot.sendMessage(update.message.chat_id, text='pong')
 
 def error(bot, update, error):
     logger.error('Update "%s" caused error "%s"' % (update, error))
-
 
 def main():
     print 'start'
@@ -49,6 +59,7 @@ def main():
     # on different commands - answer in Telegram
     dp.addHandler(CommandHandler("start", start))
     dp.addHandler(CommandHandler("help", help))
+    dp.addHandler(CommandHandler("vn-search", vn_search))
     print 'add handlers'
 
     # on noncommand i.e message - echo the message on Telegram
